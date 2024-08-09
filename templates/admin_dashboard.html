@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h2>Welcome, {{ session['username'] }}</h2>
+    <p>Select a user from the dropdown to view their details:</p>
+    <form method="post" action="#">
+        <select name="user_name" id="user_name">
+            {% for name in names %}
+                <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
