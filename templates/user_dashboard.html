@@ -12,12 +12,19 @@
         <p>Welcome, {{ session['username'] }}</p>
         <h3>Your Details:</h3>
         <pre>{{ user_details | tojson(indent=4) }}</pre>
+
+        <h3>Messages:</h3>
+        <div id="chatlog">
+            {% for message in chat_history %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+
         <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
 
         <hr>
 
         <div id="chatbox">
-            <div id="chatlog"></div>
             <input type="text" id="chatInput" class="form-control" placeholder="Type a message...">
             <button id="sendBtn" class="btn btn-primary mt-2">Send</button>
         </div>

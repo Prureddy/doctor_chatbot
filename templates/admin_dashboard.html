@@ -7,8 +7,8 @@
 </head>
 <body>
     <h2>Welcome, {{ session['username'] }}</h2>
-    <p>Select a user from the dropdown to view their details:</p>
-    <form method="post" action="#">
+    <p>Select a user from the dropdown to send a message:</p>
+    <form method="post" action="{{ url_for('admin_dashboard') }}">
         <select name="user_name" id="user_name">
             {% for name in names %}
                 <option value="{{ name }}">{{ name }}</option>

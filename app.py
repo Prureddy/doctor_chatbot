@@ -91,7 +91,12 @@ def login():
 def user_dashboard():
     if 'username' in session and session['username'] != 'admin':
         user_details = session['user_details']
-        return render_template('user_dashboard.html', user_details=user_details)
+        user_name = user_details.get('Name')
+
+        # Fetch any messages sent to this user by the admin
+        chat_history = session.get('chat_history', {}).get(user_name, [])
+
+        return render_template('user_dashboard.html', user_details=user_details, chat_history=chat_history)
     return redirect(url_for('login'))
 
 # Assign rows to each admin dynamically
@@ -103,7 +108,7 @@ def assign_rows_to_admins(df):
     for i, admin in enumerate(ADMIN_USERS):
         start_index = i * rows_per_admin
         end_index = start_index + rows_per_admin
-
+        
         # Ensure we don't exceed the dataframe's length
         if start_index < total_rows:
             ADMIN_DATA[admin] = list(range(start_index, min(end_index, total_rows)))
@@ -112,7 +117,7 @@ def assign_rows_to_admins(df):
 
     return ADMIN_DATA
 
-@app.route('/admin_dashboard')
+@app.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
     if 'username' in session and session['username'] in ADMIN_USERS:
         df = load_user_data()
@@ -123,6 +128,25 @@ def admin_dashboard():
             names = admin_data['Name'].tolist()
         else:
             names = []
+
+        if request.method == 'POST':
+            selected_user_name = request.form.get('user_name')
+            if selected_user_name:
+                # Fetch the user details
+                user_row = df[df['Name'] == selected_user_name].iloc[0]
+                
+                # Store the message in the user's session or a database
+                user_details = user_row.to_dict()
+                message = f"Hi {selected_user_name}, it's been a long time you didn't give any update."
+                
+                # Save this message in the user's session for demonstration purposes
+                if 'chat_history' not in session:
+                    session['chat_history'] = {}
+                session['chat_history'][selected_user_name] = session['chat_history'].get(selected_user_name, []) + [message]
+                
+                # Redirect to the admin dashboard after processing
+                return redirect(url_for('admin_dashboard'))
+        
         return render_template('admin_dashboard.html', names=names)
     else:
         return redirect(url_for('login'))
