@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # Initialize the OpenAI API
-openai.api_key = 'sk-proj-kogDv8AdIn3QAUaCLfKNT3BlbkFJyTnzROdCZ80hRkCV8t2U'  # Replace with your OpenAI API key
+openai.api_key = ''  # Replace with your OpenAI API key
 
 # Define admin credentials
 ADMIN_USERS = {
